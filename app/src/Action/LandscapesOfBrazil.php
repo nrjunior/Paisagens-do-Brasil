@@ -54,17 +54,22 @@ final class LandscapesOfBrazil
                     for ($l = 0; $l < $amount_local; $l++)
                     {
                         $indice_local = rand(0, count($reader[$indice_region]['local']['item']) -1);
-                        $newXML[$i]['local'][] = $reader[$indice_region]['local']['item'][$indice_local];
+                        $newXML[$i]['local']['item'][$l] = array(
+                            'name' => $reader[$indice_region]['local']['item'][$indice_local]['name'],
+                            'uf' => $reader[$indice_region]['local']['item'][$indice_local]['uf'],
+                            'description' => $reader[$indice_region]['local']['item'][$indice_local]['description'],
+                            'images' => array(
+                                'image' => $this->getPathImages() .$reader[$indice_region]['local']['item'][$indice_local]['images']['image']
+                            )
+                        );
 
                         unset($reader[$indice_region]['local']['item'][$indice_local]);
                         shuffle($reader[$indice_region]['local']['item']);
                     }
 
+
                     unset($reader[$indice_region]);
                     shuffle($reader);
-
-//                var_dump($reader[$indice_region]['local']['item']);
-//                die;
                 }
 
                 FileSystemCache::store($key, $newXML, 432000);
@@ -95,9 +100,6 @@ final class LandscapesOfBrazil
         }
 
         return $response;
-
-        //print_r($newXML);
-
     }
 
 
@@ -109,6 +111,11 @@ final class LandscapesOfBrazil
     public function setFileXML($fileXML)
     {
         $this->fileXML = $fileXML;
+    }
+
+    public function  getPathImages()
+    {
+        return 'http://' . $_SERVER['HTTP_HOST'] . '/data/uploads/images/';
     }
 
 }
